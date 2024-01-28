@@ -15,7 +15,7 @@ class Product(Model):
 
 class ProductRecipe(Model):
     product = ForeignKey(Product, verbose_name="продукт", on_delete=CASCADE)
-    recipe = ForeignKey('Recipe', verbose_name="рецепт", on_delete=CASCADE)
+    recipe = ForeignKey('Recipe', verbose_name="рецепт", on_delete=CASCADE, related_name='products_in_recipe')
     quantity = IntegerField(verbose_name="количество в г")
 
     def __str__(self):
