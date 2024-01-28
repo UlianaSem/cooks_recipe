@@ -1,4 +1,6 @@
 from django.views.generic import ListView
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -11,6 +13,14 @@ from main.services import cook_recipe
 
 class AddProductAPIView(APIView):
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter("recipe_id", OpenApiTypes.INT, OpenApiParameter.QUERY),
+            OpenApiParameter("product_id", OpenApiTypes.INT, OpenApiParameter.QUERY),
+            OpenApiParameter("weight", OpenApiTypes.INT, OpenApiParameter.QUERY),
+        ],
+        responses=ProductRecipeSerializer,
+    )
     def get(self, request, format=None):
         recipe_id = self.request.query_params.get('recipe_id')
         product_id = self.request.query_params.get('product_id')
@@ -31,6 +41,12 @@ class AddProductAPIView(APIView):
 
 class CookRecipeAPIView(APIView):
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter("recipe_id", OpenApiTypes.INT, OpenApiParameter.QUERY),
+        ],
+        responses=ProductSerializer(many=True),
+    )
     def get(self, request, format=None):
         recipe_id = self.request.query_params.get('recipe_id')
         recipe = get_object_or_404(Recipe, pk=recipe_id)
