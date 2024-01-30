@@ -1,4 +1,6 @@
-from main.models import Recipe, Product
+from django.db.models import F
+
+from main.models import Recipe
 
 
 def cook_recipe(recipe: Recipe):
@@ -10,8 +12,8 @@ def cook_recipe(recipe: Recipe):
     products = recipe.products.all()
 
     for product in products:
-        product.number_of_uses += 1
-
-    Product.objects.bulk_update(products, ["number_of_uses"])
+        product.number_of_uses = F('number_of_uses') + 1
+        product.save()
+        product.refresh_from_db()
 
     return products
