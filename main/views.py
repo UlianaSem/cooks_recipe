@@ -63,7 +63,7 @@ class ShowRecipesListView(ListView):
         queryset = super().get_queryset()
         product_id = self.request.GET.get('product_id')
 
-        queryset = (queryset.filter(products__id=product_id).filter(products_in_recipe__quantity__lt=10)
-                    | queryset.exclude(products__id=product_id)).distinct('id')
+        queryset = (queryset.filter(products__id=product_id).filter(products_in_recipe__quantity__lt=10).
+                    union(queryset.exclude(products__id=product_id)))
 
         return queryset
